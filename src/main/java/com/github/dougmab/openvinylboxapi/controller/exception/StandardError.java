@@ -1,4 +1,4 @@
-package com.github.dougmab.openvinylboxapi.controllers.exceptions;
+package com.github.dougmab.openvinylboxapi.controller.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 

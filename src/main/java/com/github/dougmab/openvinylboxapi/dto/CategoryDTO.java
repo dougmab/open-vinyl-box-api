@@ -1,6 +1,6 @@
 package com.github.dougmab.openvinylboxapi.dto;
 
-import com.github.dougmab.openvinylboxapi.entities.Category;
+import com.github.dougmab.openvinylboxapi.entity.Category;
 
 import java.io.Serial;
 import java.io.Serializable;

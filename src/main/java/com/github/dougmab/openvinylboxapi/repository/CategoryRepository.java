@@ -1,6 +1,6 @@
-package com.github.dougmab.openvinylboxapi.repositories;
+package com.github.dougmab.openvinylboxapi.repository;
 
-import com.github.dougmab.openvinylboxapi.entities.Category;
+import com.github.dougmab.openvinylboxapi.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

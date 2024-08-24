@@ -1,4 +1,4 @@
-package com.github.dougmab.openvinylboxapi.entities;
+package com.github.dougmab.openvinylboxapi.entity;
 
 import jakarta.persistence.*;
 

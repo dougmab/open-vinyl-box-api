@@ -1,8 +1,8 @@
-package com.github.dougmab.openvinylboxapi.services;
+package com.github.dougmab.openvinylboxapi.service;
 
 import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
-import com.github.dougmab.openvinylboxapi.entities.Category;
-import com.github.dougmab.openvinylboxapi.repositories.CategoryRepository;
+import com.github.dougmab.openvinylboxapi.entity.Category;
+import com.github.dougmab.openvinylboxapi.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
