@@ -1,5 +1,6 @@
 package com.github.dougmab.openvinylboxapi.entity;
 
+import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -27,6 +28,10 @@ public class Category implements Serializable {
 
     public Category(String name) {
         this.name = name;
+    }
+
+    public Category(CategoryDTO dto) {
+        this.name = dto.getName();
     }
 
     public Long getId() {
