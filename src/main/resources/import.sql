@@ -1,6 +1,6 @@
-INSERT INTO category (name) VALUES ('Jazz');
-INSERT INTO category (name) VALUES ('Pop');
-INSERT INTO category (name) VALUES ('Rock');
-INSERT INTO category (name) VALUES ('Chill');
-INSERT INTO category (name) VALUES ('Rap');
-INSERT INTO category (name) VALUES ('Metal');
+INSERT INTO category (name, created_at) VALUES ('Jazz', NOW());
+INSERT INTO category (name, created_at) VALUES ('Pop', NOW());
+INSERT INTO category (name, created_at) VALUES ('Rock', NOW());
+INSERT INTO category (name, created_at) VALUES ('Chill', NOW());
+INSERT INTO category (name, created_at) VALUES ('Rap', NOW());
+INSERT INTO category (name, created_at) VALUES ('Metal', NOW());
