@@ -2,6 +2,7 @@ package com.github.dougmab.openvinylboxapi.controller.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +16,15 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(e, request);
         err.setStatus(HttpStatus.NOT_FOUND.value());
         err.setError("Resource not found");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> entityNotFound(DataIntegrityViolationException e, HttpServletRequest request) {
+        StandardError err = new StandardError(e, request);
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Data integrity violation");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
