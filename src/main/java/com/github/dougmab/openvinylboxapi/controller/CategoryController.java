@@ -25,7 +25,6 @@ public class CategoryController {
     }
 
     @GetMapping
-
     public ResponseEntity<ApiResponse<Page<CategoryDTO>>> findAll(
             @PageableDefault(sort = "name", direction = Direction.ASC)
             Pageable pageable
