@@ -1,6 +1,7 @@
 package com.github.dougmab.openvinylboxapi.controller;
 
 import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
+import com.github.dougmab.openvinylboxapi.payload.ApiResponse;
 import com.github.dougmab.openvinylboxapi.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(
+    public ResponseEntity<ApiResponse<Page<CategoryDTO>>> findAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "12") Integer size,
             @RequestParam(defaultValue = "name") String orderBy,
@@ -33,30 +34,30 @@ public class CategoryController {
 
         Page<CategoryDTO> list = service.findAllPaged(pageRequest);
 
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(ApiResponse.ok(list));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<CategoryDTO>> findById(@PathVariable Long id) {
         CategoryDTO dto = service.findById(id);
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(ApiResponse.ok(dto));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
+    public ResponseEntity<ApiResponse<CategoryDTO>> insert(@RequestBody CategoryDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(dto);
+        return ResponseEntity.created(uri).body(ApiResponse.ok(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO newDto) {
+    public ResponseEntity<ApiResponse<CategoryDTO>> update(@PathVariable Long id, @RequestBody CategoryDTO newDto) {
         newDto = service.update(id, newDto);
 
-        return ResponseEntity.ok(newDto);
+        return ResponseEntity.ok(ApiResponse.ok(newDto));
     }
 
     @DeleteMapping("/{id}")

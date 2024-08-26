@@ -14,7 +14,6 @@ public class StandardError implements Serializable {
     private Instant timestamp;
     private Integer status;
     private String error;
-    private String message;
     private String path;
 
     public StandardError() {}
@@ -27,7 +26,7 @@ public class StandardError implements Serializable {
      */
     public StandardError(RuntimeException e, HttpServletRequest request) {
         this.timestamp = Instant.now();
-        this.message = e.getMessage();
+        this.error = e.getMessage();
         this.path = request.getRequestURI();
     }
 
@@ -53,14 +52,6 @@ public class StandardError implements Serializable {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getPath() {

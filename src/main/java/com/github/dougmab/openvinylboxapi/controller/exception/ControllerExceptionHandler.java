@@ -1,5 +1,6 @@
 package com.github.dougmab.openvinylboxapi.controller.exception;
 
+import com.github.dougmab.openvinylboxapi.payload.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,20 +13,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<StandardError>> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
         StandardError err = new StandardError(e, request);
         err.setStatus(HttpStatus.NOT_FOUND.value());
-        err.setError("Resource not found");
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error("Entity not found", err));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<StandardError> entityNotFound(DataIntegrityViolationException e, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<StandardError>> entityNotFound(DataIntegrityViolationException e, HttpServletRequest request) {
         StandardError err = new StandardError(e, request);
         err.setStatus(HttpStatus.BAD_REQUEST.value());
-        err.setError("Data integrity violation");
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error("Data integrity violation", err));
     }
 }
