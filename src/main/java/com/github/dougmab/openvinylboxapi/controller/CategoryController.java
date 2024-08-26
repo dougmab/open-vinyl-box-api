@@ -5,8 +5,9 @@ import com.github.dougmab.openvinylboxapi.payload.ApiResponse;
 import com.github.dougmab.openvinylboxapi.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,15 +25,12 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<CategoryDTO>>> findAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "12") Integer size,
-            @RequestParam(defaultValue = "name") String orderBy,
-            @RequestParam(defaultValue = "ASC") String direction
-    ) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(direction), orderBy);
 
-        Page<CategoryDTO> list = service.findAllPaged(pageRequest);
+    public ResponseEntity<ApiResponse<Page<CategoryDTO>>> findAll(
+            @PageableDefault(sort = "name", direction = Direction.ASC)
+            Pageable pageable
+    ) {
+        Page<CategoryDTO> list = service.findAllPaged(pageable);
 
         return ResponseEntity.ok(ApiResponse.ok(list));
     }
