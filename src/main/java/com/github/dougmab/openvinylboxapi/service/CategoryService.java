@@ -2,6 +2,7 @@ package com.github.dougmab.openvinylboxapi.service;
 
 import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
 import com.github.dougmab.openvinylboxapi.entity.Category;
+import com.github.dougmab.openvinylboxapi.exception.ExceptionFactory;
 import com.github.dougmab.openvinylboxapi.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
-        Category entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        Category entity = repository.findById(id).orElseThrow(() -> ExceptionFactory.entityNotFound(Category.class, id));
         return new CategoryDTO(entity);
     }
 
@@ -53,7 +54,7 @@ public class CategoryService {
             entity = repository.save(entity);
             return new CategoryDTO(entity);
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("Category with id " + id + " was not found");
+            throw ExceptionFactory.entityNotFound(Category.class, id);
         }
     }
 
