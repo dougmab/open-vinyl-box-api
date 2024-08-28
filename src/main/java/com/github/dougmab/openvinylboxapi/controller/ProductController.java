@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/product")
@@ -19,8 +22,8 @@ public class ProductController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProductDTO>>> findAll(Pageable pageable) {
+        @GetMapping
+        public ResponseEntity<ApiResponse<Page<ProductDTO>>> findAll(Pageable pageable) {
         Page<ProductDTO> list = service.findAllPaged(pageable);
 
         return ResponseEntity.ok(ApiResponse.ok(list));
@@ -36,8 +39,10 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ApiResponse<ProductDTO>> insert(@RequestBody ProductDTO dto) {
         dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
 
-        return ResponseEntity.ok(ApiResponse.ok(dto));
+        return ResponseEntity.created(uri).body(ApiResponse.ok(dto));
     }
 
     @PutMapping("/{id}")
