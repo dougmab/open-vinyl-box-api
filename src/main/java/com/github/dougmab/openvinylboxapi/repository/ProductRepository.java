@@ -1,4 +1,6 @@
 package com.github.dougmab.openvinylboxapi.repository;
 
-public interface ProductRepository {
-}
+import com.github.dougmab.openvinylboxapi.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {}
