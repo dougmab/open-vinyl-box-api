@@ -6,6 +6,7 @@ import com.github.dougmab.openvinylboxapi.entity.Product;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class ProductDTO {
@@ -87,5 +88,18 @@ public class ProductDTO {
 
     public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDTO that = (ProductDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imgUrl, that.imgUrl) && Objects.equals(date, that.date) && Objects.equals(categories, that.categories);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imgUrl, date, categories);
     }
 }
