@@ -9,6 +9,7 @@ INSERT INTO category (name, created_at) VALUES ('Blues', NOW());
 INSERT INTO category (name, created_at) VALUES ('Reggae', NOW());
 INSERT INTO category (name, created_at) VALUES ('Electronic', NOW());
 INSERT INTO category (name, created_at) VALUES ('Metal', NOW());
+INSERT INTO category (name, created_at) VALUES ('Alternative', NOW());
 
 INSERT INTO product (name, price, img_url, date) VALUES ('The Best of Miles Davis', 9.99, 'https://picsum.photos/200', NOW());
 INSERT INTO product (name, price, img_url, date) VALUES ('The Best of The Beatles', 9.99, 'https://picsum.photos/200', NOW());
@@ -20,6 +21,7 @@ INSERT INTO product (name, price, img_url, date) VALUES ('The Best of Johnny Cas
 INSERT INTO product (name, price, img_url, date) VALUES ('The Best of B.B. King', 9.99, 'https://picsum.photos/200', NOW());
 INSERT INTO product (name, price, img_url, date) VALUES ('The Best of Daft Punk', 9.99, 'https://picsum.photos/200', NOW());
 INSERT INTO product (name, price, img_url, date) VALUES ('The Best of Metallica', 9.99, 'https://picsum.photos/200', NOW());
+INSERT INTO product (name, price, img_url, date) VALUES ('The Best of SIAMES', 9.99, 'https://picsum.photos/200', NOW());
 
 INSERT INTO product_category (product_id, category_id) VALUES (1, 1);
 INSERT INTO product_category (product_id, category_id) VALUES (2, 2);
