@@ -26,7 +26,7 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(e, request);
         err.setStatus(HttpStatus.BAD_REQUEST.value());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error("Data integrity violation", err));
     }
 }
