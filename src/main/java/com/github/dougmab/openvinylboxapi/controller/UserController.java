@@ -38,10 +38,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UserDTO>> insert(@RequestBody UserInsertDTO dto) {
-        UserDTO newDto = service.insert(dto);
+    public ResponseEntity<ApiResponse<UserDTO>> insert(@RequestBody UserInsertDTO insertDto) {
+        UserDTO newDto = service.insert(insertDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(dto.getId()).toUri();
+                .buildAndExpand(newDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(ApiResponse.ok(newDto));
     }
