@@ -11,4 +11,8 @@ public class ExceptionFactory {
     public static DataIntegrityViolationException dataIntegrityViolationForeignKey(Class<?> entity) {
         return new DataIntegrityViolationException(entity.getSimpleName() + " is being referenced by another entity and cannot be deleted");
     }
+
+    public static DataIntegrityViolationException dataIntegrityViolationUniqueField(Class<?> entity, String field) {
+        return new DataIntegrityViolationException("There is already a " + entity.getSimpleName() + " with the " + field + " provided");
+    }
 }
