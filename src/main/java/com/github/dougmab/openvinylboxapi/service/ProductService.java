@@ -78,7 +78,7 @@ public class ProductService {
         try {
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw ExceptionFactory.dataIntegrityViolation(Product.class);
+            throw ExceptionFactory.dataIntegrityViolationForeignKey(Product.class);
         }
     }
 }
