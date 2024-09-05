@@ -30,6 +30,13 @@ public class StandardError implements Serializable {
         this.path = request.getRequestURI();
     }
 
+    public StandardError(Integer status, String error, String path) {
+        this.timestamp = Instant.now();
+        this.status = status;
+        this.error = error;
+        this.path = path;
+    }
+
     public Instant getTimestamp() {
         return timestamp;
     }
