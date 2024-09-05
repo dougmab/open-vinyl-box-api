@@ -15,19 +15,17 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiResponse<StandardError>> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
-        StandardError err = new StandardError(e, request);
-        err.setStatus(HttpStatus.NOT_FOUND.value());
+        StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(err.getStatus())
                 .body(ApiResponse.error("Entity not found", err));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse<StandardError>> entityNotFound(DataIntegrityViolationException e, HttpServletRequest request) {
-        StandardError err = new StandardError(e, request);
-        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        StandardError err = new StandardError(HttpStatus.CONFLICT.value(), e.getMessage(), request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(err.getStatus())
                 .body(ApiResponse.error("Data integrity violation", err));
     }
 
