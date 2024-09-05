@@ -2,6 +2,7 @@ package com.github.dougmab.openvinylboxapi.dto;
 
 import com.github.dougmab.openvinylboxapi.entity.Category;
 import com.github.dougmab.openvinylboxapi.entity.Product;
+import jakarta.validation.constraints.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,9 +12,19 @@ import java.util.Set;
 
 public class ProductDTO {
     private Long id;
+    @NotBlank(message = "Name is required")
+    @Size(min = 5, max = 60, message = "Name must be between 2 and 80 characters")
     private String name;
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be positive")
     private Double price;
+
+    @NotBlank(message = "Image URL is required")
     private String imgUrl;
+
+    @NotNull(message = "Date is required")
+    @PastOrPresent(message = "Date must be in the past or present")
     private Instant date;
 
     private List<CategoryDTO> categories = new ArrayList<>();

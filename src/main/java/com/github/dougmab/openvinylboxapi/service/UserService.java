@@ -75,9 +75,14 @@ public class UserService {
 
             entity = repository.save(entity);
 
+            // Must commit changes so the email unique constraint is enforced
+            repository.flush();
+
             return new UserDTO(entity);
         } catch (EntityNotFoundException e) {
             throw ExceptionFactory.entityNotFound(User.class, id);
+        } catch (DataIntegrityViolationException e) {
+            throw ExceptionFactory.dataIntegrityViolationUniqueField(User.class, "email");
         }
     }
 

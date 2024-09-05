@@ -3,6 +3,7 @@ package com.github.dougmab.openvinylboxapi.controller;
 import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
 import com.github.dougmab.openvinylboxapi.payload.ApiResponse;
 import com.github.dougmab.openvinylboxapi.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CategoryDTO>> insert(@RequestBody CategoryDTO dto) {
+    public ResponseEntity<ApiResponse<CategoryDTO>> insert(@RequestBody @Valid CategoryDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -51,7 +52,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryDTO>> update(@PathVariable Long id, @RequestBody CategoryDTO newDto) {
+    public ResponseEntity<ApiResponse<CategoryDTO>> update(@PathVariable Long id, @RequestBody @Valid CategoryDTO newDto) {
         newDto = service.update(id, newDto);
 
         return ResponseEntity.ok(ApiResponse.ok(newDto));
