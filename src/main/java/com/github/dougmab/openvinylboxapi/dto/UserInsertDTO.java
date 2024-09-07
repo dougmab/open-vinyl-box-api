@@ -1,12 +1,10 @@
 package com.github.dougmab.openvinylboxapi.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.github.dougmab.openvinylboxapi.validation.annotation.Password;
 
 public class UserInsertDTO extends UserDTO {
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, max = 80, message = "Password must be between 6 and 80 characters")
+    @Password
     private String password;
 
     public UserInsertDTO() {

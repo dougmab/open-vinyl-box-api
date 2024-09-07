@@ -1,6 +1,7 @@
 package com.github.dougmab.openvinylboxapi.dto;
 
 import com.github.dougmab.openvinylboxapi.entity.User;
+import com.github.dougmab.openvinylboxapi.validation.annotation.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,6 +21,7 @@ public class UserDTO {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
+    @UniqueEmail
     private String email;
 
     private Set<RoleDTO> roles = new HashSet<>();
