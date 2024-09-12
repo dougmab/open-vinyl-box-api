@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dougmab.openvinylboxapi.dto.CategoryDTO;
 import com.github.dougmab.openvinylboxapi.entity.EntityFactory;
 import com.github.dougmab.openvinylboxapi.repository.CategoryRepository;
+import com.github.dougmab.openvinylboxapi.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class CategoryControllerIntegrationTests {
 
@@ -32,6 +36,9 @@ public class CategoryControllerIntegrationTests {
     @Autowired
     private CategoryRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     private long existingId;
     private long nonExistingId;
     private long independentId;
@@ -41,6 +48,7 @@ public class CategoryControllerIntegrationTests {
 
     @BeforeEach
     void setUp() throws Exception {
+
         existingId = 1L;
         nonExistingId = 1000L;
         countTotalCategories = 12L;
@@ -50,6 +58,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findAllShouldReturnPageOfCategories() throws Exception {
         // By default, id is sorted in ascending order by the name. I'm changing that for test purposes
         mockMvc.perform(get("/category?size=10&sort=id")
@@ -66,6 +75,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnCategoryDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/category/{id}", existingId)
                         .accept("application/json"))
@@ -77,6 +87,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/category/{id}", nonExistingId)
                         .accept("application/json"))
@@ -86,6 +97,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void insertShouldPersistProductWithAutoincrementWhenIdIsNull() throws Exception {
         categoryDTO.setId(null);
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
@@ -101,6 +113,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
         mockMvc.perform(put("/category/{id}", existingId)
@@ -115,6 +128,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
         mockMvc.perform(put("/category/{id}", nonExistingId)
@@ -126,6 +140,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDeleteResourceWhenIdExistsAndIsNotAssociatedToForeignKey() throws Exception {
         mockMvc.perform(delete("/category/{id}", independentId)
                         .accept("application/json"))
@@ -135,6 +150,7 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDoNothingWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/category/{id}", nonExistingId)
                         .accept("application/json"))
@@ -145,10 +161,12 @@ public class CategoryControllerIntegrationTests {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @WithUserDetails("test@example.com")
     public void deleteShouldThrowDataIntegrityViolationWhenAssociatedToForeignKey() throws Exception {
         mockMvc.perform(delete("/category/{id}", existingId)
+
                         .accept("application/json"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.status").value(400));
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.data.status").value(409));
     }
 }

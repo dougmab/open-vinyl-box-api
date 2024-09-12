@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class ProductControllerIntegrationTests {
 
@@ -48,6 +51,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findAllShouldReturnPageOfProducts() throws Exception {
         mockMvc.perform(get("/product?size=10")
                         .accept("application/json"))
@@ -69,6 +73,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnProductDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/product/{id}", existingId)
                         .accept("application/json"))
@@ -86,6 +91,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/product/{id}", nonExistingId)
                         .accept("application/json"))
@@ -95,6 +101,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void insertShouldPersistProductWithAutoincrementWhenIdIsNull() throws Exception {
         productDTO.setId(null);
         String jsonBody = objectMapper.writeValueAsString(productDTO);
@@ -115,6 +122,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         mockMvc.perform(put("/product/{id}", existingId)
@@ -134,6 +142,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         mockMvc.perform(put("/product/{id}", nonExistingId)
@@ -145,6 +154,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDeleteResourceWhenIdExists() throws Exception {
         mockMvc.perform(delete("/product/{id}", existingId)
                         .accept("application/json"))
@@ -154,6 +164,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDoNothingWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/product/{id}", nonExistingId)
                         .accept("application/json"))

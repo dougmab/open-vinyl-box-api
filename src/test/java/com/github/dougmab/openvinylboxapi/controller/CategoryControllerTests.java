@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -37,6 +38,9 @@ public class CategoryControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    private String adminToken;
+    private String userToken;
+
     @MockBean
     private CategoryService service;
 
@@ -56,6 +60,9 @@ public class CategoryControllerTests {
         nonExistingId = 1000L;
         dependentId = 5L;
 
+        adminToken = EntityFactory.createTokenDTO(EntityFactory.createAdmin(1L)).getAccessToken();
+        userToken = EntityFactory.createTokenDTO(EntityFactory.createUser(2L)).getAccessToken();
+
         when(service.findAllPaged(any(Pageable.class))).thenReturn(page);
 
         when(service.findById(existingId)).thenReturn(categoryDTO);
@@ -71,6 +78,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/category"))
                 .andExpect(status().isOk())
@@ -84,6 +92,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findByIdShouldReturnCategoryDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/category/{id}", existingId).accept("application/json"))
                 .andExpect(status().isOk())
@@ -94,6 +103,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findByIdShouldReturn404WhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/category/{id}", nonExistingId).accept("application/json"))
                 .andExpect(status().isNotFound())
@@ -101,6 +111,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void insertShouldReturnCategoryDTOWhenIdIsNull() throws Exception {
         categoryDTO.setId(null);
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
@@ -118,6 +129,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
 
@@ -133,6 +145,7 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void updateShouldReturn404WhenIdDoesNotExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
 
@@ -145,15 +158,17 @@ public class CategoryControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void deleteShouldReturn204WhenIdExists() throws Exception {
         mockMvc.perform(delete("/category/{id}", existingId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    public void deleteShouldReturn400WhenIdIsDependent() throws Exception {
+    @WithMockUser(roles = {"USER"})
+    public void deleteShouldReturn409WhenIdIsDependent() throws Exception {
         mockMvc.perform(delete("/category/{id}", dependentId))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.status").value(400));
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.data.status").value(409));
     }
 }
