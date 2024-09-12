@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
@@ -38,13 +39,9 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
         Long userId = uriVars.get("id") != null ? Long.parseLong(uriVars.get("id")) : null;
 
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user != null) {
-            return user.getId().equals(userId);
-        }
-
-        return true;
+        return user.map(value -> value.getId().equals(userId)).orElse(true);
     }
 
 }

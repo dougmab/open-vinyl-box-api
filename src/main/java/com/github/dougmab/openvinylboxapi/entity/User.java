@@ -1,17 +1,19 @@
 package com.github.dougmab.openvinylboxapi.entity;
 
+import com.github.dougmab.openvinylboxapi.dto.LoginDTO;
 import com.github.dougmab.openvinylboxapi.dto.UserDTO;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements UserDetails, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -81,8 +83,18 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream().map(role -> (GrantedAuthority) role::getAuthority).toList();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     public void setPassword(String password) {
@@ -104,5 +116,9 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public boolean isLoginCorrect(LoginDTO credentials, BCryptPasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(credentials.getPassword(), password);
     }
 }

@@ -2,21 +2,31 @@ package com.github.dougmab.openvinylboxapi.service;
 
 import com.github.dougmab.openvinylboxapi.dto.UserDTO;
 import com.github.dougmab.openvinylboxapi.dto.UserInsertDTO;
+import com.github.dougmab.openvinylboxapi.entity.Role;
 import com.github.dougmab.openvinylboxapi.entity.User;
 import com.github.dougmab.openvinylboxapi.exception.ExceptionFactory;
 import com.github.dougmab.openvinylboxapi.repository.RoleRepository;
 import com.github.dougmab.openvinylboxapi.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository repository;
     private final RoleRepository roleRepository;
@@ -47,9 +57,7 @@ public class UserService {
         User user = new User(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        dto.getRoles().forEach(role -> {
-            user.getRoles().add(roleRepository.getReferenceById(role.getId()));
-        });
+        user.getRoles().add(roleRepository.findByAuthority(Role.Authorities.USER.name()));
 
         try {
             User entity = repository.save(user);
@@ -67,6 +75,8 @@ public class UserService {
             entity.setFirstName(dto.getFirstName());
             entity.setLastName(dto.getLastName());
             entity.setEmail(dto.getEmail());
+
+            entity.getRoles().clear();
 
             User finalEntity = entity;
             dto.getRoles().forEach(role -> {
@@ -92,5 +102,19 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             throw ExceptionFactory.dataIntegrityViolationForeignKey(User.class);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = repository.findByEmail(username);
+
+        if (user.isEmpty()) {
+            logger.error("User not found: {}", username);
+            throw new UsernameNotFoundException("Email not found");
+        }
+
+        logger.info("User found: {}", username);
+
+        return user.get();
     }
 }

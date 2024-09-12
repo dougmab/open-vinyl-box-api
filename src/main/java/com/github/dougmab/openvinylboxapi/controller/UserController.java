@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +26,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<ApiResponse<Page<UserDTO>>> findAll(Pageable pageable) {
         Page<UserDTO> list = service.findAllPaged(pageable);
 
@@ -32,6 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<ApiResponse<UserDTO>> findById(@PathVariable Long id) {
         UserDTO dto = service.findById(id);
 
@@ -48,6 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<ApiResponse<UserDTO>> update(@PathVariable Long id, @RequestBody @Valid UserDTO newDto) {
         newDto = service.update(id, newDto);
 
@@ -55,6 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<UserDTO> delete(@PathVariable Long id) {
         service.delete(id);
 

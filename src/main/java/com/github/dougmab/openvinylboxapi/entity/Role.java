@@ -19,6 +19,17 @@ public class Role implements Serializable {
     private Long id;
     private String authority;
 
+    public enum Authorities {
+        ADMIN(1L),
+        USER(2L);
+
+        private final Long id;
+
+        Authorities(Long id) {
+            this.id = id;
+        }
+    }
+
     public Role() {}
 
     public Role(Long id, String authority) {
