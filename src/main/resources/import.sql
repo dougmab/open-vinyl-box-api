@@ -1,8 +1,8 @@
 INSERT INTO users (first_name, last_name, email, password) VALUES ('Maria', 'Rosa', 'mariross@gmail.com','$2a$10$3FV4k9zQj0zg1Z5Hl2qy8e7Y8q3JZ2HtY5jX0Xz9Z1zj9XeZcZ8Jq');
 INSERT INTO users (first_name, last_name, email, password) VALUES ('Juan', 'Perez', 'juann@gmail.com', '$2a$10$3FV4k9zQj0zg1Z5Hl2qy8e7Y8q3JZ2HtY5jX0Xz9Z1zj9XeZcZ8Jq');
 
-INSERT INTO roles (authority) VALUES ('ROLE_OPERATOR');
-INSERT INTO roles (authority) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (authority) VALUES ('ADMIN');
+INSERT INTO roles (authority) VALUES ('USER');
 
 INSERT INTO user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_role (user_id, role_id) VALUES (2, 1);
