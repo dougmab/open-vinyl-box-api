@@ -70,16 +70,20 @@ public class EntityFactory {
     }
 
     public static UserDTO createUserDTO(Long id) {
-        UserDTO userDto = new UserDTO(id, "Admin", "", "admin@admin.com");
+        UserDTO userDto = new UserDTO(id, "Bob", "Tester", generateEmail());
         userDto.getRoles().add(new RoleDTO(2L, Role.Authorities.USER.name()));
 
         return userDto;
     }
 
     public static User createUser(Long id) {
-        User user = new User(id, "Bob", "Tester", "test@example.com", passwordEncoder.encode("Test_123"));
+        User user = new User(id, "Bob", "Tester", generateEmail(), passwordEncoder.encode("Test_123"));
         user.getRoles().add(new Role(2L, Role.Authorities.USER.name()));
 
         return user;
+    }
+
+    private static String generateEmail() {
+        return (Instant.now().getNano() / 2) + "@example.com";
     }
 }
