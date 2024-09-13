@@ -1,6 +1,6 @@
 INSERT INTO users (first_name, last_name, email, password) VALUES ('User', 'Tester', 'test@example.com','$2a$10$u06mL5aQs7J8lbnMWuIulu1zwW2.Pf.ESkAt/jPkDrTbPN12u2eHe');
 INSERT INTO users (first_name, last_name, email, password) VALUES ('Juan', 'Perez', 'juann@gmail.com', '$2a$10$3FV4k9zQj0zg1Z5Hl2qy8e7Y8q3JZ2HtY5jX0Xz9Z1zj9XeZcZ8Jq');
-INSERT INTO users (first_name, last_name, email, password) VALUES ('Juan', 'Perez', 'juann@gmail.com', '$2a$10$3FV4k9zQj0zg1Z5Hl2qy8e7Y8q3JZ2HtY5jX0Xz9Z1zj9XeZcZ8Jq');
+INSERT INTO users (first_name, last_name, email, password) VALUES ('Maria', 'Gomez', 'maria@gmail.com', '$2a$10$3FV4k9zQj0zg1Z5Hl2qy8e7Y8q3JZ2HtY5jX0Xz9Z1zj9XeZcZ8Jq');
 
 INSERT INTO roles (authority) VALUES ('ADMIN');
 INSERT INTO roles (authority) VALUES ('USER');
