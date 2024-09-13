@@ -58,6 +58,25 @@ public class CategoryControllerIntegrationTests {
     }
 
     @Test
+    public void anyMethodShouldReturnUnauthorizedWhenNoAuthenticatedUser() throws Exception {
+        mockMvc.perform(get("/category")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(put("/category")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/category")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/category")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithUserDetails("test@example.com")
     public void findAllShouldReturnPageOfCategories() throws Exception {
         // By default, id is sorted in ascending order by the name. I'm changing that for test purposes

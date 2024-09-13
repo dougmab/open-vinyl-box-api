@@ -51,6 +51,25 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    public void anyMethodShouldReturnUnauthorizedWhenNoAuthenticatedUser() throws Exception {
+        mockMvc.perform(get("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(put("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithUserDetails("test@example.com")
     public void findAllShouldReturnPageOfProducts() throws Exception {
         mockMvc.perform(get("/product?size=10")
