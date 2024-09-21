@@ -2,6 +2,7 @@ package com.github.dougmab.openvinylboxapi.service;
 
 import com.github.dougmab.openvinylboxapi.dto.LoginDTO;
 import com.github.dougmab.openvinylboxapi.dto.TokenDTO;
+import com.github.dougmab.openvinylboxapi.dto.UserDTO;
 import com.github.dougmab.openvinylboxapi.entity.Role;
 import com.github.dougmab.openvinylboxapi.entity.User;
 import com.github.dougmab.openvinylboxapi.repository.UserRepository;
@@ -55,6 +56,6 @@ public class TokenService {
 
         String jwtToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return new TokenDTO(jwtToken, expiresInSeconds);
+        return new TokenDTO(jwtToken, expiresInSeconds, new UserDTO(user));
     }
 }
