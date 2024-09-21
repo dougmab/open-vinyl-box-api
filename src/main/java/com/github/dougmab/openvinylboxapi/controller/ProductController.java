@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -23,8 +24,8 @@ public class ProductController {
         this.service = service;
     }
 
-        @GetMapping
-        public ResponseEntity<ApiResponse<Page<ProductDTO>>> findAll(Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<ProductDTO>>> findAll(Pageable pageable) {
         Page<ProductDTO> list = service.findAllPaged(pageable);
 
         return ResponseEntity.ok(ApiResponse.ok(list));
@@ -60,3 +61,4 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 }
+
