@@ -10,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.text.ParseException;
 
 @CrossOrigin
 @RestController
@@ -32,6 +34,14 @@ public class UserController {
         Page<UserDTO> list = service.findAllPaged(pageable);
 
         return ResponseEntity.ok(ApiResponse.ok(list));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserDTO>> findCurrentUser(JwtAuthenticationToken jwt) throws ParseException {
+        System.out.println(jwt.getName());
+        UserDTO dto = service.findById(Long.parseLong(jwt.getName()));
+
+        return ResponseEntity.ok(ApiResponse.ok(dto));
     }
 
     @GetMapping("/{id}")
