@@ -77,15 +77,14 @@ public class ProductControllerTests {
         mockMvc.perform(get("/product"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").isNumber(),
-                        jsonPath("$.data.content[0].name").isString(),
-                        jsonPath("$.data.content[0].price").isNumber(),
-                        jsonPath("$.data.content[0].imgUrl").isString(),
-                        jsonPath("$.data.content[0].date").isString(),
-                        jsonPath("$.data.content[0].categories").isArray(),
-                        jsonPath("$.data.page.totalElements").isNumber(),
-                        jsonPath("$.data.page.totalPages").isNumber()
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").isNumber(),
+                        jsonPath("$.result.content[0].name").isString(),
+                        jsonPath("$.result.content[0].price").isNumber(),
+                        jsonPath("$.result.content[0].imgUrl").isString(),
+                        jsonPath("$.result.content[0].categories").isArray(),
+                        jsonPath("$.result.page.totalElements").isNumber(),
+                        jsonPath("$.result.page.totalPages").isNumber()
                 );
     }
 
@@ -95,12 +94,11 @@ public class ProductControllerTests {
         mockMvc.perform(get("/product/{id}", existingId).accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
 
                 );
     }
@@ -110,7 +108,7 @@ public class ProductControllerTests {
     public void findByIdShouldReturn404WhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/product/{id}", nonExistingId).accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -126,12 +124,11 @@ public class ProductControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
                 );
     }
 
@@ -146,12 +143,11 @@ public class ProductControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
                 );
     }
 
@@ -165,7 +161,7 @@ public class ProductControllerTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -180,6 +176,6 @@ public class ProductControllerTests {
     public void deleteShouldReturn409WhenIdIsDependent() throws Exception {
         mockMvc.perform(delete("/product/{id}", dependentId))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.data.status").value(409));
+                .andExpect(jsonPath("$.result.status").value(409));
     }
 }

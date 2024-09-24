@@ -83,11 +83,11 @@ public class CategoryControllerTests {
         mockMvc.perform(get("/category"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").isNumber(),
-                        jsonPath("$.data.content[0].name").isString(),
-                        jsonPath("$.data.page.totalElements").isNumber(),
-                        jsonPath("$.data.page.totalPages").isNumber()
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").isNumber(),
+                        jsonPath("$.result.content[0].name").isString(),
+                        jsonPath("$.result.page.totalElements").isNumber(),
+                        jsonPath("$.result.page.totalPages").isNumber()
                 );
     }
 
@@ -97,8 +97,8 @@ public class CategoryControllerTests {
         mockMvc.perform(get("/category/{id}", existingId).accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString()
                 );
     }
 
@@ -107,7 +107,7 @@ public class CategoryControllerTests {
     public void findByIdShouldReturn404WhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/category/{id}", nonExistingId).accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -123,8 +123,8 @@ public class CategoryControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString()
                 );
     }
 
@@ -139,8 +139,8 @@ public class CategoryControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString()
                 );
     }
 
@@ -154,7 +154,7 @@ public class CategoryControllerTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -169,6 +169,6 @@ public class CategoryControllerTests {
     public void deleteShouldReturn409WhenIdIsDependent() throws Exception {
         mockMvc.perform(delete("/category/{id}", dependentId))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.data.status").value(409));
+                .andExpect(jsonPath("$.result.status").value(409));
     }
 }

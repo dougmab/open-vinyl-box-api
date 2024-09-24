@@ -52,7 +52,6 @@ public class ProductRepositoryTests {
         assertThat(product.getName()).isEqualTo("Thriller");
         assertThat(product.getPrice()).isEqualTo(9.99);
         assertThat(product.getImgUrl()).isEqualTo("https://picsum.photos/200");
-        assertThat(product.getDate()).isEqualTo("1982-11-29T10:00:00Z");
     }
 
     @Test
@@ -65,7 +64,6 @@ public class ProductRepositoryTests {
         assertThat(product.getName()).isEqualTo("Thriller");
         assertThat(product.getPrice()).isEqualTo(9.99);
         assertThat(product.getImgUrl()).isEqualTo("https://picsum.photos/200");
-        assertThat(product.getDate()).isEqualTo("1982-11-29T10:00:00Z");
     }
 
     @Test

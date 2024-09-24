@@ -23,7 +23,7 @@ public class EntityFactory {
     }
 
     public static Product createProduct(Long id) {
-        Product product = new Product(id, "Thriller", 9.99, "https://picsum.photos/200", Instant.parse("1982-11-29T10:00:00Z"));
+        Product product = new Product(id, "Thriller", 9.99, "https://picsum.photos/200");
         product.getCategories().add(createCategory(1L));
         return product;
     }
@@ -51,7 +51,7 @@ public class EntityFactory {
         String tokenString = new Jwt("open-vinyl-box-api-test", now, now.plusSeconds(expiresInSeconds),
                 Collections.singletonMap("alg", "none"), claims.getClaims()).getTokenValue();
 
-        return new TokenDTO(tokenString, expiresInSeconds);
+        return new TokenDTO(tokenString, expiresInSeconds, new UserDTO(user));
     }
 
     public static UserDTO createAdminDTO(Long id) {

@@ -75,7 +75,6 @@ public class ProductServiceIntegrationTests {
         assertThat(dto.getName()).isEqualTo(productDTO.getName());
         assertThat(dto.getPrice()).isEqualTo(productDTO.getPrice());
         assertThat(dto.getImgUrl()).isEqualTo(productDTO.getImgUrl());
-        assertThat(dto.getDate()).isEqualTo(productDTO.getDate());
         assertThat(dto.getCategories().get(0).getId()).isEqualTo(productDTO.getCategories().get(0).getId());
     }
 
@@ -87,7 +86,6 @@ public class ProductServiceIntegrationTests {
         assertThat(dto.getName()).isEqualTo(productDTO.getName());
         assertThat(dto.getPrice()).isEqualTo(productDTO.getPrice());
         assertThat(dto.getImgUrl()).isEqualTo(productDTO.getImgUrl());
-        assertThat(dto.getDate()).isEqualTo(productDTO.getDate());
         assertThat(dto.getCategories().get(0).getId()).isEqualTo(productDTO.getCategories().get(0).getId());
     }
 

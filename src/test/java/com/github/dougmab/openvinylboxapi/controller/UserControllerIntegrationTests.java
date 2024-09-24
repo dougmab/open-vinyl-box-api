@@ -103,15 +103,15 @@ public class UserControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").exists(),
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").value(1),
-                        jsonPath("$.data.content[0].firstName").value("User"),
-                        jsonPath("$.data.content[0].lastName").value("Tester"),
-                        jsonPath("$.data.content[0].email").value("test@example.com"),
-                        jsonPath("$.data.content[0].roles[0].authority").value("USER"),
-                        jsonPath("$.data.page.totalElements").value(countTotalCategories),
-                        jsonPath("$.data.page.totalPages").value(1)
+                        jsonPath("$.result.content").exists(),
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").value(1),
+                        jsonPath("$.result.content[0].firstName").value("User"),
+                        jsonPath("$.result.content[0].lastName").value("Tester"),
+                        jsonPath("$.result.content[0].email").value("test@example.com"),
+                        jsonPath("$.result.content[0].roles[0].authority").value("USER"),
+                        jsonPath("$.result.page.totalElements").value(countTotalCategories),
+                        jsonPath("$.result.page.totalPages").value(1)
                 );
     }
 
@@ -123,11 +123,11 @@ public class UserControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(existingId),
-                        jsonPath("$.data.firstName").value("User"),
-                        jsonPath("$.data.lastName").value("Tester"),
-                        jsonPath("$.data.email").value("test@example.com"),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").value(existingId),
+                        jsonPath("$.result.firstName").value("User"),
+                        jsonPath("$.result.lastName").value("Tester"),
+                        jsonPath("$.result.email").value("test@example.com"),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -138,7 +138,7 @@ public class UserControllerIntegrationTests {
                         .header("Authorization", "Bearer " + adminToken)
                         .accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
 
     }
 
@@ -154,12 +154,12 @@ public class UserControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(countTotalCategories + 1),
-                        jsonPath("$.data.firstName").value(insertDto.getFirstName()),
-                        jsonPath("$.data.lastName").value(insertDto.getLastName()),
-                        jsonPath("$.data.email").value(insertDto.getEmail()),
-                        jsonPath("$.data.password").doesNotExist(),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").value(countTotalCategories + 1),
+                        jsonPath("$.result.firstName").value(insertDto.getFirstName()),
+                        jsonPath("$.result.lastName").value(insertDto.getLastName()),
+                        jsonPath("$.result.email").value(insertDto.getEmail()),
+                        jsonPath("$.result.password").doesNotExist(),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -174,12 +174,12 @@ public class UserControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(existingId),
-                        jsonPath("$.data.firstName").value(userDTO.getFirstName()),
-                        jsonPath("$.data.lastName").value(userDTO.getLastName()),
-                        jsonPath("$.data.email").value(userDTO.getEmail()),
-                        jsonPath("$.data.password").doesNotExist(),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").value(existingId),
+                        jsonPath("$.result.firstName").value(userDTO.getFirstName()),
+                        jsonPath("$.result.lastName").value(userDTO.getLastName()),
+                        jsonPath("$.result.email").value(userDTO.getEmail()),
+                        jsonPath("$.result.password").doesNotExist(),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -193,7 +193,7 @@ public class UserControllerIntegrationTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test

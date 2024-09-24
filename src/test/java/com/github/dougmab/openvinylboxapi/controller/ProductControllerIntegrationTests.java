@@ -51,11 +51,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
-    public void anyMethodShouldReturnUnauthorizedWhenNoAuthenticatedUser() throws Exception {
-        mockMvc.perform(get("/product")
-                        .accept("application/json"))
-                .andExpect(status().isUnauthorized());
-
+    public void anyMethodExceptGetShouldReturnUnauthorizedWhenNoAuthenticatedUser() throws Exception {
         mockMvc.perform(put("/product")
                         .accept("application/json"))
                 .andExpect(status().isUnauthorized());
@@ -76,18 +72,18 @@ public class ProductControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").exists(),
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").value(1),
-                        jsonPath("$.data.content[0].name").value("The Best of Miles Davis"),
-                        jsonPath("$.data.content[0].price").value(9.99),
-                        jsonPath("$.data.content[0].imgUrl").value("https://picsum.photos/200"),
-                        jsonPath("$.data.content[0].date").isString(),
-                        jsonPath("$.data.content[0].categories").isArray(),
-                        jsonPath("$.data.content[0].categories[0].id").value(1),
-                        jsonPath("$.data.content[0].categories[0].name").value("Jazz"),
-                        jsonPath("$.data.page.totalElements").value(countTotalProducts),
-                        jsonPath("$.data.page.totalPages").value(2)
+                        jsonPath("$.result.content").exists(),
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").value(1),
+                        jsonPath("$.result.content[0].name").value("The Best of Miles Davis"),
+                        jsonPath("$.result.content[0].price").value(9.99),
+                        jsonPath("$.result.content[0].imgUrl").value("https://picsum.photos/200"),
+                        jsonPath("$.result.content[0].createdAt").isString(),
+                        jsonPath("$.result.content[0].categories").isArray(),
+                        jsonPath("$.result.content[0].categories[0].id").value(1),
+                        jsonPath("$.result.content[0].categories[0].name").value("Jazz"),
+                        jsonPath("$.result.page.totalElements").value(countTotalProducts),
+                        jsonPath("$.result.page.totalPages").value(2)
                 );
     }
 
@@ -98,14 +94,14 @@ public class ProductControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(1),
-                        jsonPath("$.data.name").value("The Best of Miles Davis"),
-                        jsonPath("$.data.price").value(9.99),
-                        jsonPath("$.data.imgUrl").value("https://picsum.photos/200"),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(1),
-                        jsonPath("$.data.categories[0].name").value("Jazz")
+                        jsonPath("$.result.id").value(1),
+                        jsonPath("$.result.name").value("The Best of Miles Davis"),
+                        jsonPath("$.result.price").value(9.99),
+                        jsonPath("$.result.imgUrl").value("https://picsum.photos/200"),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(1),
+                        jsonPath("$.result.categories[0].name").value("Jazz")
                 );
     }
 
@@ -115,7 +111,7 @@ public class ProductControllerIntegrationTests {
         mockMvc.perform(get("/product/{id}", nonExistingId)
                         .accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
 
     }
 
@@ -130,13 +126,13 @@ public class ProductControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(countTotalProducts + 1),
-                        jsonPath("$.data.name").value(productDTO.getName()),
-                        jsonPath("$.data.price").value(productDTO.getPrice()),
-                        jsonPath("$.data.imgUrl").value(productDTO.getImgUrl()),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(productDTO.getCategories().get(0).getId())
+                        jsonPath("$.result.id").value(countTotalProducts + 1),
+                        jsonPath("$.result.name").value(productDTO.getName()),
+                        jsonPath("$.result.price").value(productDTO.getPrice()),
+                        jsonPath("$.result.imgUrl").value(productDTO.getImgUrl()),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(productDTO.getCategories().get(0).getId())
                 );
     }
 
@@ -150,13 +146,13 @@ public class ProductControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(existingId),
-                        jsonPath("$.data.name").value(productDTO.getName()),
-                        jsonPath("$.data.price").value(productDTO.getPrice()),
-                        jsonPath("$.data.imgUrl").value(productDTO.getImgUrl()),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(productDTO.getCategories().get(0).getId())
+                        jsonPath("$.result.id").value(existingId),
+                        jsonPath("$.result.name").value(productDTO.getName()),
+                        jsonPath("$.result.price").value(productDTO.getPrice()),
+                        jsonPath("$.result.imgUrl").value(productDTO.getImgUrl()),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(productDTO.getCategories().get(0).getId())
                 );
     }
 
@@ -169,7 +165,7 @@ public class ProductControllerIntegrationTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test

@@ -87,13 +87,13 @@ public class UserControllerTests {
         mockMvc.perform(get("/user"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").isNumber(),
-                        jsonPath("$.data.content[0].firstName").isString(),
-                        jsonPath("$.data.content[0].lastName").isString(),
-                        jsonPath("$.data.content[0].email").isString(),
-                        jsonPath("$.data.content[0].roles[0].authority").value("USER"),
-                        jsonPath("$.data.page.totalPages").isNumber()
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").isNumber(),
+                        jsonPath("$.result.content[0].firstName").isString(),
+                        jsonPath("$.result.content[0].lastName").isString(),
+                        jsonPath("$.result.content[0].email").isString(),
+                        jsonPath("$.result.content[0].roles[0].authority").value("USER"),
+                        jsonPath("$.result.page.totalPages").isNumber()
                 );
     }
 
@@ -103,11 +103,11 @@ public class UserControllerTests {
         mockMvc.perform(get("/user/{id}", existingId).accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.firstName").isString(),
-                        jsonPath("$.data.lastName").isString(),
-                        jsonPath("$.data.email").isString(),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.firstName").isString(),
+                        jsonPath("$.result.lastName").isString(),
+                        jsonPath("$.result.email").isString(),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -116,7 +116,7 @@ public class UserControllerTests {
     public void findByIdShouldReturn404WhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/user/{id}", nonExistingId).accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -133,11 +133,11 @@ public class UserControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.firstName").isString(),
-                        jsonPath("$.data.lastName").isString(),
-                        jsonPath("$.data.email").isString(),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.firstName").isString(),
+                        jsonPath("$.result.lastName").isString(),
+                        jsonPath("$.result.email").isString(),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -152,11 +152,11 @@ public class UserControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.firstName").isString(),
-                        jsonPath("$.data.lastName").isString(),
-                        jsonPath("$.data.email").isString(),
-                        jsonPath("$.data.roles[0].authority").value("USER")
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.firstName").isString(),
+                        jsonPath("$.result.lastName").isString(),
+                        jsonPath("$.result.email").isString(),
+                        jsonPath("$.result.roles[0].authority").value("USER")
                 );
     }
 
@@ -171,7 +171,7 @@ public class UserControllerTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test

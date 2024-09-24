@@ -84,12 +84,12 @@ public class CategoryControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").exists(),
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").value(1),
-                        jsonPath("$.data.content[0].name").value("Jazz"),
-                        jsonPath("$.data.page.totalElements").value(countTotalCategories),
-                        jsonPath("$.data.page.totalPages").value(2)
+                        jsonPath("$.result.content").exists(),
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").value(1),
+                        jsonPath("$.result.content[0].name").value("Jazz"),
+                        jsonPath("$.result.page.totalElements").value(countTotalCategories),
+                        jsonPath("$.result.page.totalPages").value(2)
                 );
     }
 
@@ -100,8 +100,8 @@ public class CategoryControllerIntegrationTests {
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(1),
-                        jsonPath("$.data.name").value("Jazz")
+                        jsonPath("$.result.id").value(1),
+                        jsonPath("$.result.name").value("Jazz")
                 );
     }
 
@@ -111,7 +111,7 @@ public class CategoryControllerIntegrationTests {
         mockMvc.perform(get("/category/{id}", nonExistingId)
                         .accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
 
     }
 
@@ -126,8 +126,8 @@ public class CategoryControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(countTotalCategories + 1),
-                        jsonPath("$.data.name").value(categoryDTO.getName())
+                        jsonPath("$.result.id").value(countTotalCategories + 1),
+                        jsonPath("$.result.name").value(categoryDTO.getName())
                 );
     }
 
@@ -141,8 +141,8 @@ public class CategoryControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(existingId),
-                        jsonPath("$.data.name").value(categoryDTO.getName())
+                        jsonPath("$.result.id").value(existingId),
+                        jsonPath("$.result.name").value(categoryDTO.getName())
                 );
     }
 
@@ -155,7 +155,7 @@ public class CategoryControllerIntegrationTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
@@ -186,6 +186,6 @@ public class CategoryControllerIntegrationTests {
 
                         .accept("application/json"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.data.status").value(409));
+                .andExpect(jsonPath("$.result.status").value(409));
     }
 }
