@@ -1,5 +1,6 @@
 package com.github.dougmab.openvinylboxapi.controller;
 
+import com.github.dougmab.openvinylboxapi.dto.DiscountDTO;
 import com.github.dougmab.openvinylboxapi.dto.ProductDTO;
 import com.github.dougmab.openvinylboxapi.payload.ApiResponse;
 import com.github.dougmab.openvinylboxapi.service.ProductService;
@@ -47,6 +48,16 @@ public class ProductController {
         return ResponseEntity.created(uri).body(ApiResponse.ok(dto));
     }
 
+    @PostMapping("{id}/discount")
+    public ResponseEntity<ApiResponse<ProductDTO>> createDiscount(@PathVariable Long id, @RequestBody @Valid DiscountDTO discountDto) {
+        ProductDTO productDto= service.createDiscountForProductId(id, discountDto);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/product/{id}")
+                .buildAndExpand(id).toUri();
+
+        return ResponseEntity.created(uri).body(ApiResponse.ok(productDto));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductDTO>> update(@PathVariable Long id, @RequestBody @Valid ProductDTO newDto) {
         newDto = service.update(id, newDto);
@@ -57,6 +68,13 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> delete(@PathVariable Long id) {
         service.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/discount")
+    public ResponseEntity<ProductDTO> deleteDiscount(@PathVariable Long id) {
+        service.deleteDiscountForProductId(id);
 
         return ResponseEntity.noContent().build();
     }

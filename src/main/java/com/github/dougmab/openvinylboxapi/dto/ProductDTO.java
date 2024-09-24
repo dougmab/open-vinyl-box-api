@@ -23,21 +23,22 @@ public class ProductDTO {
     @NotBlank(message = "Image URL is required")
     private String imgUrl;
 
-    @NotNull(message = "Date is required")
-    @PastOrPresent(message = "Date must be in the past or present")
-    private Instant date;
+    private Instant createdAt;
+
+    private DiscountDTO discount;
 
     private List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, Double price, String imgUrl, Instant date) {
+    public ProductDTO(Long id, String name, Double price, String imgUrl, Instant createdAt, DiscountDTO discount) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.date = date;
+        this.createdAt = createdAt;
+        this.discount = discount;
     }
 
     public ProductDTO(Product entity) {
@@ -45,7 +46,9 @@ public class ProductDTO {
         name = entity.getName();
         price = entity.getPrice();
         imgUrl = entity.getImgUrl();
-        date = entity.getDate();
+        createdAt = entity.getCreatedAt();
+        if (entity.getDiscount() != null)
+            discount = new DiscountDTO(entity.getDiscount());
     }
 
     public ProductDTO(Product entity, Set<Category> categories) {
@@ -85,12 +88,16 @@ public class ProductDTO {
         this.imgUrl = imgUrl;
     }
 
-    public Instant getDate() {
-        return date;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDate(Instant date) {
-        this.date = date;
+    public DiscountDTO getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(DiscountDTO discount) {
+        this.discount = discount;
     }
 
     public List<CategoryDTO> getCategories() {
@@ -106,11 +113,11 @@ public class ProductDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductDTO that = (ProductDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imgUrl, that.imgUrl) && Objects.equals(date, that.date) && Objects.equals(categories, that.categories);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imgUrl, that.imgUrl) && Objects.equals(createdAt, that.createdAt) && Objects.equals(categories, that.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imgUrl, date, categories);
+        return Objects.hash(id, name, price, imgUrl, createdAt, categories);
     }
 }
