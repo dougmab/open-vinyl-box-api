@@ -8,7 +8,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +26,12 @@ public class Product implements Serializable {
     private String name;
     private Double price;
     private String imgUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private final List<Rating> ratings = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private RatingStatistics ratingStatistics;
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "discount_id", referencedColumnName = "id")
@@ -109,5 +117,17 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public RatingStatistics getRatingStatistics() {
+        return ratingStatistics;
+    }
+
+    public void setRatingStatistics(RatingStatistics ratingStatistics) {
+        this.ratingStatistics = ratingStatistics;
     }
 }

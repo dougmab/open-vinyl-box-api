@@ -4,10 +4,12 @@ import com.github.dougmab.openvinylboxapi.dto.DiscountDTO;
 import com.github.dougmab.openvinylboxapi.dto.ProductDTO;
 import com.github.dougmab.openvinylboxapi.entity.Discount;
 import com.github.dougmab.openvinylboxapi.entity.Product;
+import com.github.dougmab.openvinylboxapi.entity.RatingStatistics;
 import com.github.dougmab.openvinylboxapi.exception.ExceptionFactory;
 import com.github.dougmab.openvinylboxapi.repository.CategoryRepository;
 import com.github.dougmab.openvinylboxapi.repository.DiscountRepository;
 import com.github.dougmab.openvinylboxapi.repository.ProductRepository;
+import com.github.dougmab.openvinylboxapi.repository.RatingStatisticsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -21,24 +23,26 @@ public class ProductService {
     private final ProductRepository repository;
     private final CategoryRepository categoryRepository;
     private final DiscountRepository discountRepository;
+    private final RatingStatisticsRepository statisticsRepository;
 
     public ProductService(ProductRepository repository,
-                          CategoryRepository categoryRepository, DiscountRepository discountRepository) {
+                          CategoryRepository categoryRepository, DiscountRepository discountRepository, RatingStatisticsRepository statisticsRepository) {
         this.repository = repository;
         this.categoryRepository = categoryRepository;
         this.discountRepository = discountRepository;
+        this.statisticsRepository = statisticsRepository;
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAllPaged(Pageable pageable) {
         Page<Product> list = repository.findAll(pageable);
-        return list.map((product) -> new ProductDTO(product, product.getCategories()));
+        return list.map((product) -> new ProductDTO(product, product.getCategories(), product.getRatingStatistics().getAverageRating()));
     }
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Product entity = repository.findById(id).orElseThrow(() -> ExceptionFactory.entityNotFound(Product.class, id));
-        return new ProductDTO(entity, entity.getCategories());
+        return new ProductDTO(entity, entity.getCategories(), entity.getRatingStatistics());
     }
 
     @Transactional
@@ -49,9 +53,12 @@ public class ProductService {
             product.getCategories().add(categoryRepository.getReferenceById(category.getId()));
         });
 
-        Product entity = repository.save(product);
+        RatingStatistics statistics = new RatingStatistics(product);
 
-        return new ProductDTO(entity, entity.getCategories());
+        Product entity = repository.save(product);
+        statisticsRepository.save(statistics);
+
+        return new ProductDTO(entity, entity.getCategories(), entity.getRatingStatistics());
     }
 
     @Transactional
@@ -71,7 +78,7 @@ public class ProductService {
 
             entity = repository.save(entity);
 
-            return new ProductDTO(entity, entity.getCategories());
+            return new ProductDTO(entity, entity.getCategories(), entity.getRatingStatistics());
         } catch (EntityNotFoundException e) {
             throw ExceptionFactory.entityNotFound(Product.class, id);
         }
@@ -85,7 +92,7 @@ public class ProductService {
 
         repository.save(product);
 
-        return new ProductDTO(product, product.getCategories());
+        return new ProductDTO(product, product.getCategories(), product.getRatingStatistics());
     }
 
     @Transactional

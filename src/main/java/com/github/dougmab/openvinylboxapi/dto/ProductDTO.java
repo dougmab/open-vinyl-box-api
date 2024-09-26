@@ -1,8 +1,13 @@
 package com.github.dougmab.openvinylboxapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.dougmab.openvinylboxapi.entity.Category;
 import com.github.dougmab.openvinylboxapi.entity.Product;
-import jakarta.validation.constraints.*;
+import com.github.dougmab.openvinylboxapi.entity.RatingStatistics;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,6 +31,12 @@ public class ProductDTO {
     private Instant createdAt;
 
     private DiscountDTO discount;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private RatingStatisticsDTO ratingStatistics;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Double averageRating;
 
     private List<CategoryDTO> categories = new ArrayList<>();
 
@@ -51,9 +62,31 @@ public class ProductDTO {
             discount = new DiscountDTO(entity.getDiscount());
     }
 
-    public ProductDTO(Product entity, Set<Category> categories) {
+    private ProductDTO(Product entity, Set<Category> categories) {
         this(entity);
         categories.forEach(category -> this.categories.add(new CategoryDTO(category)));
+    }
+
+    /**
+     * Constructor with rating statistics
+     * @param entity
+     * @param categories
+     * @param ratingStatistics
+     */
+    public ProductDTO(Product entity, Set<Category> categories, RatingStatistics ratingStatistics) {
+        this(entity, categories);
+        this.ratingStatistics = new RatingStatisticsDTO(ratingStatistics);
+    }
+
+    /**
+     * Constructor with average rating (better suited to pageable results)
+     * @param entity
+     * @param categories
+     * @param averageRating
+     */
+    public ProductDTO(Product entity, Set<Category> categories, Double averageRating) {
+        this(entity, categories);
+        this.averageRating = averageRating;
     }
 
     public Long getId() {
@@ -106,6 +139,22 @@ public class ProductDTO {
 
     public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
+    }
+
+    public RatingStatisticsDTO getRatingStatistics() {
+        return ratingStatistics;
+    }
+
+    public void setRatingStatistics(RatingStatisticsDTO ratingStatistics) {
+        this.ratingStatistics = ratingStatistics;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 
     @Override
