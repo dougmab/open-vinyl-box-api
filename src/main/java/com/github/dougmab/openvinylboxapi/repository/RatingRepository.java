@@ -17,6 +17,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     boolean existsByProductIdAndUserId(Long productId, Long userId);
 
-    @Query("SELECT new com.github.dougmab.openvinylboxapi.dto.UserRatingDTO(u.id, u.firstName, u.lastName, r.ratingValue, r.comment) FROM Rating r JOIN r.user u WHERE r.product.id = :productId")
+    @Query("SELECT new com.github.dougmab.openvinylboxapi.dto.UserRatingDTO(u.id, u.firstName, u.lastName, r.ratingValue, r.comment, r.createdAt) FROM Rating r JOIN r.user u WHERE r.product.id = :productId")
     Page<UserRatingDTO> findRatingsByProductId(Long productId, Pageable pageable);
 }

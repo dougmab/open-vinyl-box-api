@@ -1,21 +1,25 @@
 package com.github.dougmab.openvinylboxapi.dto;
 
+import java.time.Instant;
+
 public class UserRatingDTO {
     private Long userId;
     private String firstName;
     private String lastName;
     private Short rating;
     private String comment;
+    private Instant createdAt;
 
     public UserRatingDTO() {
     }
 
-    public UserRatingDTO(Long id, String firstName, String lastName, Short rating, String comment) {
+    public UserRatingDTO(Long id, String firstName, String lastName, Short rating, String comment, Instant createdAt) {
         this.userId = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.rating = rating;
         this.comment = comment;
+        this.createdAt = createdAt;
     }
 
     public Long getUserId() {
@@ -56,5 +60,9 @@ public class UserRatingDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 }

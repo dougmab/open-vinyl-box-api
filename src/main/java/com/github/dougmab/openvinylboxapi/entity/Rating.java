@@ -2,9 +2,12 @@ package com.github.dougmab.openvinylboxapi.entity;
 
 import com.github.dougmab.openvinylboxapi.dto.RatingDTO;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 public class Rating implements Serializable {
@@ -26,6 +29,14 @@ public class Rating implements Serializable {
 
     private Short ratingValue;
     private String comment;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    @UpdateTimestamp
+    private Instant updatedAt;
 
     public Rating() {
     }
@@ -76,5 +87,13 @@ public class Rating implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }
