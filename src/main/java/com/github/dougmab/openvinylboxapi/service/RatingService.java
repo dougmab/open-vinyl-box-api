@@ -33,7 +33,12 @@ public class RatingService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserRatingDTO> findUserRatingsOfProductId(Long productId, Pageable pageable) {
+    public UserRatingDTO findRatingOfProductIdAndUserId(Long productId, Long userId) {
+        return repository.findUserRatingByProductIdAndUserId(productId, userId).orElseThrow(() -> new EntityNotFoundException("Rating not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserRatingDTO> findAllUserRatingsOfProductId(Long productId, Pageable pageable) {
         return repository.findRatingsByProductId(productId, pageable);
     }
 

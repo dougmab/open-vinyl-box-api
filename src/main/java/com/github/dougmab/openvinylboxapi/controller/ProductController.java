@@ -89,15 +89,30 @@ public class ProductController {
     // RATING RELATED ENDPOINTS
     @GetMapping("{id}/rating")
     public ResponseEntity<ApiResponse<Page<UserRatingDTO>>> findRatingsByProductId(@PathVariable Long id, Pageable pageable) {
-        Page<UserRatingDTO> list = ratingService.findUserRatingsOfProductId(id, pageable);
+        Page<UserRatingDTO> list = ratingService.findAllUserRatingsOfProductId(id, pageable);
 
         return ResponseEntity.ok(ApiResponse.ok(list));
+    }
+
+    @GetMapping("{productId}/rating/{userId}")
+    public ResponseEntity<ApiResponse<UserRatingDTO>> findRatingsByProductId(@PathVariable Long productId, @PathVariable Long userId) {
+        UserRatingDTO dto = ratingService.findRatingOfProductIdAndUserId(productId, userId);
+
+        return ResponseEntity.ok(ApiResponse.ok(dto));
     }
 
     @PostMapping("{id}/rating")
     public ResponseEntity<ProductDTO> rateProduct(@PathVariable Long id, JwtAuthenticationToken jwt, @RequestBody @Valid RatingDTO ratingDto) {
         Long userId = Long.parseLong(jwt.getName());
         ratingService.addRating(id, userId, ratingDto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("{id}/rating")
+    public ResponseEntity<ProductDTO> UpdateProductRating(@PathVariable Long id, JwtAuthenticationToken jwt, @RequestBody @Valid RatingDTO ratingDto) {
+        Long userId = Long.parseLong(jwt.getName());
+        ratingService.updateRating(id, userId, ratingDto);
 
         return ResponseEntity.noContent().build();
     }
