@@ -47,7 +47,7 @@ INSERT INTO product_category (product_id, category_id) VALUES (8, 8);
 INSERT INTO product_category (product_id, category_id) VALUES (9, 10);
 INSERT INTO product_category (product_id, category_id) VALUES (10, 11);
 
-INSERT INTO rating_statistics (five_stars, four_stars, three_stars, two_stars, one_star, total_stars, total_ratings, product_id) VALUES (1, 2, 0, 0, 0, 13, 3, 1);
+INSERT INTO rating_statistics (five_stars, four_stars, three_stars, two_stars, one_star, total_stars, total_ratings, product_id) VALUES (0, 0, 0, 0, 0, 0, 0, 1);
 INSERT INTO rating_statistics (five_stars, four_stars, three_stars, two_stars, one_star, total_stars, total_ratings, product_id) VALUES (2, 2, 0, 0, 0, 18, 4, 2);
 INSERT INTO rating_statistics (five_stars, four_stars, three_stars, two_stars, one_star, total_stars, total_ratings, product_id) VALUES (1, 2, 1, 0, 0, 16, 4, 3);
 INSERT INTO rating_statistics (five_stars, four_stars, three_stars, two_stars, one_star, total_stars, total_ratings, product_id) VALUES (0, 2, 0, 0, 0, 8, 2, 4);
