@@ -63,7 +63,7 @@ public class CategoryService {
         try {
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw ExceptionFactory.dataIntegrityViolation(Category.class);
+            throw ExceptionFactory.dataIntegrityViolationForeignKey(Category.class);
         }
     }
 }

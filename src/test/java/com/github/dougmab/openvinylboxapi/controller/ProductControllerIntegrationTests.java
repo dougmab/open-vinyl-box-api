@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @Transactional
 public class ProductControllerIntegrationTests {
 
@@ -48,53 +51,72 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    public void anyMethodExceptGetShouldReturnUnauthorizedWhenNoAuthenticatedUser() throws Exception {
+        mockMvc.perform(put("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(delete("/product")
+                        .accept("application/json"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails("test@example.com")
     public void findAllShouldReturnPageOfProducts() throws Exception {
         mockMvc.perform(get("/product?size=10")
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").exists(),
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").value(1),
-                        jsonPath("$.data.content[0].name").value("The Best of Miles Davis"),
-                        jsonPath("$.data.content[0].price").value(9.99),
-                        jsonPath("$.data.content[0].imgUrl").value("https://picsum.photos/200"),
-                        jsonPath("$.data.content[0].date").isString(),
-                        jsonPath("$.data.content[0].categories").isArray(),
-                        jsonPath("$.data.content[0].categories[0].id").value(1),
-                        jsonPath("$.data.content[0].categories[0].name").value("Jazz"),
-                        jsonPath("$.data.page.totalElements").value(countTotalProducts),
-                        jsonPath("$.data.page.totalPages").value(2)
+                        jsonPath("$.result.content").exists(),
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").value(1),
+                        jsonPath("$.result.content[0].name").value("The Best of Miles Davis"),
+                        jsonPath("$.result.content[0].price").value(9.99),
+                        jsonPath("$.result.content[0].imgUrl").value("https://picsum.photos/200"),
+                        jsonPath("$.result.content[0].createdAt").isString(),
+                        jsonPath("$.result.content[0].categories").isArray(),
+                        jsonPath("$.result.content[0].categories[0].id").value(1),
+                        jsonPath("$.result.content[0].categories[0].name").value("Jazz"),
+                        jsonPath("$.result.page.totalElements").value(countTotalProducts),
+                        jsonPath("$.result.page.totalPages").value(2)
                 );
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnProductDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/product/{id}", existingId)
                         .accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(1),
-                        jsonPath("$.data.name").value("The Best of Miles Davis"),
-                        jsonPath("$.data.price").value(9.99),
-                        jsonPath("$.data.imgUrl").value("https://picsum.photos/200"),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(1),
-                        jsonPath("$.data.categories[0].name").value("Jazz")
+                        jsonPath("$.result.id").value(1),
+                        jsonPath("$.result.name").value("The Best of Miles Davis"),
+                        jsonPath("$.result.price").value(9.99),
+                        jsonPath("$.result.imgUrl").value("https://picsum.photos/200"),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(1),
+                        jsonPath("$.result.categories[0].name").value("Jazz")
                 );
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/product/{id}", nonExistingId)
                         .accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
 
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void insertShouldPersistProductWithAutoincrementWhenIdIsNull() throws Exception {
         productDTO.setId(null);
         String jsonBody = objectMapper.writeValueAsString(productDTO);
@@ -104,17 +126,18 @@ public class ProductControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(countTotalProducts + 1),
-                        jsonPath("$.data.name").value(productDTO.getName()),
-                        jsonPath("$.data.price").value(productDTO.getPrice()),
-                        jsonPath("$.data.imgUrl").value(productDTO.getImgUrl()),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(productDTO.getCategories().get(0).getId())
+                        jsonPath("$.result.id").value(countTotalProducts + 1),
+                        jsonPath("$.result.name").value(productDTO.getName()),
+                        jsonPath("$.result.price").value(productDTO.getPrice()),
+                        jsonPath("$.result.imgUrl").value(productDTO.getImgUrl()),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(productDTO.getCategories().get(0).getId())
                 );
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         mockMvc.perform(put("/product/{id}", existingId)
@@ -123,17 +146,18 @@ public class ProductControllerIntegrationTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").value(existingId),
-                        jsonPath("$.data.name").value(productDTO.getName()),
-                        jsonPath("$.data.price").value(productDTO.getPrice()),
-                        jsonPath("$.data.imgUrl").value(productDTO.getImgUrl()),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray(),
-                        jsonPath("$.data.categories[0].id").value(productDTO.getCategories().get(0).getId())
+                        jsonPath("$.result.id").value(existingId),
+                        jsonPath("$.result.name").value(productDTO.getName()),
+                        jsonPath("$.result.price").value(productDTO.getPrice()),
+                        jsonPath("$.result.imgUrl").value(productDTO.getImgUrl()),
+                        jsonPath("$.result.createdAt").isString(),
+                        jsonPath("$.result.categories").isArray(),
+                        jsonPath("$.result.categories[0].id").value(productDTO.getCategories().get(0).getId())
                 );
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         mockMvc.perform(put("/product/{id}", nonExistingId)
@@ -141,10 +165,11 @@ public class ProductControllerIntegrationTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDeleteResourceWhenIdExists() throws Exception {
         mockMvc.perform(delete("/product/{id}", existingId)
                         .accept("application/json"))
@@ -154,6 +179,7 @@ public class ProductControllerIntegrationTests {
     }
 
     @Test
+    @WithUserDetails("test@example.com")
     public void deleteShouldDoNothingWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(delete("/product/{id}", nonExistingId)
                         .accept("application/json"))

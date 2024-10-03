@@ -1,6 +1,7 @@
 package com.github.dougmab.openvinylboxapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dougmab.openvinylboxapi.config.SecurityConfig;
 import com.github.dougmab.openvinylboxapi.dto.ProductDTO;
 import com.github.dougmab.openvinylboxapi.entity.EntityFactory;
 import com.github.dougmab.openvinylboxapi.service.ProductService;
@@ -10,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
+@Import(SecurityConfig.class)
 public class ProductControllerTests {
 
     @Autowired
@@ -68,45 +72,47 @@ public class ProductControllerTests {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/product"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.content").isArray(),
-                        jsonPath("$.data.content[0].id").isNumber(),
-                        jsonPath("$.data.content[0].name").isString(),
-                        jsonPath("$.data.content[0].price").isNumber(),
-                        jsonPath("$.data.content[0].imgUrl").isString(),
-                        jsonPath("$.data.content[0].date").isString(),
-                        jsonPath("$.data.content[0].categories").isArray(),
-                        jsonPath("$.data.page.totalElements").isNumber(),
-                        jsonPath("$.data.page.totalPages").isNumber()
+                        jsonPath("$.result.content").isArray(),
+                        jsonPath("$.result.content[0].id").isNumber(),
+                        jsonPath("$.result.content[0].name").isString(),
+                        jsonPath("$.result.content[0].price").isNumber(),
+                        jsonPath("$.result.content[0].imgUrl").isString(),
+                        jsonPath("$.result.content[0].categories").isArray(),
+                        jsonPath("$.result.page.totalElements").isNumber(),
+                        jsonPath("$.result.page.totalPages").isNumber()
                 );
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findByIdShouldReturnProductDTOWhenIdExists() throws Exception {
         mockMvc.perform(get("/product/{id}", existingId).accept("application/json"))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
 
                 );
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void findByIdShouldReturn404WhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/product/{id}", nonExistingId).accept("application/json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void insertShouldReturnProductDTOWhenIdIsNull() throws Exception {
         productDTO.setId(null);
         String jsonBody = objectMapper.writeValueAsString(productDTO);
@@ -118,16 +124,16 @@ public class ProductControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isCreated())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
                 );
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
 
@@ -137,16 +143,16 @@ public class ProductControllerTests {
                         .content(jsonBody))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.data.id").isNumber(),
-                        jsonPath("$.data.name").isString(),
-                        jsonPath("$.data.price").isNumber(),
-                        jsonPath("$.data.imgUrl").isString(),
-                        jsonPath("$.data.date").isString(),
-                        jsonPath("$.data.categories").isArray()
+                        jsonPath("$.result.id").isNumber(),
+                        jsonPath("$.result.name").isString(),
+                        jsonPath("$.result.price").isNumber(),
+                        jsonPath("$.result.imgUrl").isString(),
+                        jsonPath("$.result.categories").isArray()
                 );
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void updateShouldReturn404WhenIdDoesNotExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
 
@@ -155,19 +161,21 @@ public class ProductControllerTests {
                         .contentType("application/json")
                         .content(jsonBody))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.data.status").value(404));
+                .andExpect(jsonPath("$.result.status").value(404));
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void deleteShouldReturn204WhenIdExists() throws Exception {
         mockMvc.perform(delete("/product/{id}", existingId))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    public void deleteShouldReturn400WhenIdIsDependent() throws Exception {
+    @WithMockUser(roles = {"USER"})
+    public void deleteShouldReturn409WhenIdIsDependent() throws Exception {
         mockMvc.perform(delete("/product/{id}", dependentId))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.status").value(400));
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.result.status").value(409));
     }
 }
